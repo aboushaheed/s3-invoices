@@ -1,0 +1,26 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    url: jdbc:h2:mem:poc;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    platform: h2
+    username: poc
+    password:
+    driverClassName: org.h2.Driver
+  profiles:
+    active: dev
+
+aws:
+  s3:
+    main_bucket: main-bucket
+    sub_bucket: sub-bucket
+    credential_type: LOCAL
+    region: us-west-2
+  profile:
+    name: default
+
+server:
+  servlet:
+    contextPath: /
