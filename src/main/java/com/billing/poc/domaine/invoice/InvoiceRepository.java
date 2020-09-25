@@ -10,6 +10,6 @@ public interface InvoiceRepository {
 
     Optional<Invoice> findById(Integer id);
     List<Invoice> findByDate(LocalDate date);
-    Invoice save(Invoice invoice);
+    Invoice saveInvoice(Invoice invoice);
     void deleteById(Integer id);
 }

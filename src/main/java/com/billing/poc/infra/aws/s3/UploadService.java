@@ -1,11 +1,7 @@
 package com.billing.poc.infra.aws.s3;
 
 import com.amazonaws.AmazonClientException;
-import com.billing.poc.domaine.invoice.model.Invoice;
-import com.billing.poc.infra.sql.InvoiceRepository;
 import com.billing.poc.interfaces.http.exception.UploadErrorException;
-import com.billing.poc.interfaces.http.model.InvoiceDTO;
-import com.billing.poc.interfaces.http.model.request.CreateInvoiceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 
 @Service
 public class UploadService {

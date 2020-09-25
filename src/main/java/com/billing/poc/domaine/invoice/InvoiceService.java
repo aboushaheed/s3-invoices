@@ -2,7 +2,7 @@ package com.billing.poc.domaine.invoice;
 
 import com.billing.poc.domaine.invoice.model.Invoice;
 import com.billing.poc.infra.sql.InvoiceRepository;
-import com.billing.poc.interfaces.http.model.InvoiceDTO;
+import com.billing.poc.interfaces.http.model.response.InvoiceDTO;
 import com.billing.poc.interfaces.http.model.request.CreateInvoiceRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +24,11 @@ public class InvoiceService {
         Invoice invoice = Invoice.builder()
                 .created(LocalDateTime.now())
                 .date(createInvoiceRequest.getDate())
-                .number(createInvoiceRequest.getNumber())
+                .name(createInvoiceRequest.getNumber())
                 .paid(false)
                 .totalAmount(createInvoiceRequest.getTotalAmount())
                 .build();
-        return invoiceRepository.save(invoice).toDto();
+        invoice =   invoiceRepository.saveInvoice(invoice);
+         return invoice.toDto();
     }
 }

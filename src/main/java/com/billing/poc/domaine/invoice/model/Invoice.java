@@ -1,12 +1,10 @@
 package com.billing.poc.domaine.invoice.model;
 
-import com.billing.poc.interfaces.http.model.InvoiceDTO;
+import com.billing.poc.interfaces.http.model.response.InvoiceDTO;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,9 +18,11 @@ import java.time.LocalDateTime;
 @Builder
 public class Invoice {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     private Integer id;
 
-    private String number;
+    private String name;
 
     private BigDecimal totalAmount;
 
@@ -42,7 +42,7 @@ public class Invoice {
         return InvoiceDTO.builder()
                 .created(this.created)
                 .date(this.date)
-                .number(this.number)
+                .name(this.name)
                 .paid(this.paid)
                 .paidDate(this.paidDate)
                 .reminderLevel(this.reminderLevel)

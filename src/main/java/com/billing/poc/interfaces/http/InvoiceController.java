@@ -6,7 +6,7 @@ import com.billing.poc.infra.aws.s3.DownloadService;
 import com.billing.poc.infra.aws.s3.Pair;
 import com.billing.poc.infra.aws.s3.UploadService;
 import com.billing.poc.interfaces.http.exception.SearchInvalidFormatDataException;
-import com.billing.poc.interfaces.http.model.InvoiceDTO;
+import com.billing.poc.interfaces.http.model.response.InvoiceDTO;
 import com.billing.poc.interfaces.http.model.request.CreateInvoiceRequest;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class InvoiceController {
 
 
     @ApiOperation(value="Store metadata of file", nickname="storeData", notes="This service store metadata")
-    @RequestMapping(path="/",  consumes ="multipart/form-data", method= RequestMethod.POST, produces="application/json")
+    @RequestMapping(path="/",  consumes ="application/json", method= RequestMethod.POST, produces="application/json")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Request Accepted"),
             @ApiResponse(code = 400, message = "upload did not perform"),

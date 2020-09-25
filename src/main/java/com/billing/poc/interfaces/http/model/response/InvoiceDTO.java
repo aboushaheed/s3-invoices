@@ -1,6 +1,9 @@
-package com.billing.poc.interfaces.http.model;
+package com.billing.poc.interfaces.http.model.response;
 
 import com.billing.poc.domaine.invoice.model.ReminderLevel;
+import com.billing.poc.interfaces.http.model.request.JsonLocalDateDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -20,18 +23,20 @@ import java.time.LocalDateTime;
 public class InvoiceDTO {
 
     @ApiModelProperty(notes = "the number of the invoice", example = "INV12300")
-    private String number;
+    private String name;
 
     @ApiModelProperty(notes = "the invoice Amount in Euros", example = "123.33")
     private BigDecimal totalAmount;
 
     @ApiModelProperty(notes = "date of issue of the invoice", example = "23/02/2019")
+
     private LocalDate date;
 
     @ApiModelProperty(notes = "flag for payment", example = "false")
     private boolean paid;
 
     @ApiModelProperty(notes = "date of payment if done", example = "false")
+    @JsonSerialize(using= JsonLocalDateSerializer.class)
     private LocalDate paidDate;
 
     @ApiModelProperty(notes = "Level remind for this invoice", example = "LEVEL_1")
