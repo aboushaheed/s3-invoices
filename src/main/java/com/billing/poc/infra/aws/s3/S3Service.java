@@ -22,7 +22,8 @@ public class S3Service {
 	private String s3RegionName;
 	@Value("${aws.profile.name}")
 	private String profileName;
-
+	@Value("${aws.s3.endpoint}")
+	private String endpoint;
 
 	/**
 	 * upload file to S3
@@ -40,7 +41,7 @@ public class S3Service {
 		if(fileUploaded == null || !fileUploaded.toFile().exists())
 			throw new InvalidUploadS3Arguments("No file to download");
 		return client.sendFile(fileUploaded.toFile(), bucketPath, fileName,
-				AwsCredentialType.valueOf(credentialTypeString), profileName, s3RegionName);
+				AwsCredentialType.valueOf(credentialTypeString), profileName, s3RegionName, endpoint);
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class S3Service {
 			throws AmazonClientException, InterruptedException, IOException {
 		BillingS3Client client = new BillingS3Client();
 		String bucketPath = String.join("/", mainBucket,subBucket);
-		return client.downloadFile(bucketPath, fileName, AwsCredentialType.valueOf(credentialTypeString), profileName, s3RegionName);
+		return client.downloadFile(bucketPath, fileName, AwsCredentialType.valueOf(credentialTypeString), profileName, s3RegionName, endpoint);
 	}
 
 

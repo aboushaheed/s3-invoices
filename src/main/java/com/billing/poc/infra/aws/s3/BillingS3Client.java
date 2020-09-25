@@ -4,6 +4,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -13,6 +14,7 @@ import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
 import com.amazonaws.services.s3.transfer.Upload;
 import com.billing.poc.infra.aws.AwsCredentialType;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,18 +29,22 @@ public class BillingS3Client {
     private static AmazonS3 s3Client;
     private static TransferManager transferManager;
 
-    public AmazonS3 getClient(AwsCredentialType credentialType, String profileName, String region) {
+
+    public AmazonS3 getClient(AwsCredentialType credentialType, String profileName, String region, String endpoint) {
         if(s3Client == null) {
-            AmazonS3ClientBuilder builder = AmazonS3Client.builder().withRegion(Regions.fromName(region));
+            AmazonS3ClientBuilder builder = AmazonS3Client.builder();
             switch (credentialType) {
                 case ENVIRONMENT:
-                    builder.withCredentials(new EnvironmentVariableCredentialsProvider());
+                    builder.withCredentials(new EnvironmentVariableCredentialsProvider()).withRegion(Regions.fromName(region));
                     break;
                 case LOCAL:
-                    builder.withCredentials(new ProfileCredentialsProvider(profileName));
+                    builder.withCredentials(new ProfileCredentialsProvider(profileName))
+                            .withEndpointConfiguration( new AwsClientBuilder.EndpointConfiguration(endpoint,
+                                    Regions.fromName(region).getName()));
                     break;
                 case INSTANCE:
-                    builder.withCredentials(InstanceProfileCredentialsProvider.getInstance());
+                    builder.withCredentials(InstanceProfileCredentialsProvider.getInstance())
+                            .withRegion(Regions.fromName(region));
                     break;
             }
             s3Client = builder.build();
@@ -50,8 +56,11 @@ public class BillingS3Client {
 
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public Pair<byte[], Map<String, Object>> downloadFile(String bucketPath, String fileName, AwsCredentialType credentialType, String profileName, String region) throws AmazonClientException, InterruptedException, IOException {
-        AmazonS3 client = getClient(credentialType, profileName, region);
+    public Pair<byte[], Map<String, Object>> downloadFile(String bucketPath, String fileName,
+                                                          AwsCredentialType credentialType,
+                                                          String profileName, String region, String endpoint)
+            throws AmazonClientException, IOException {
+        AmazonS3 client = getClient(credentialType, profileName, region, endpoint);
         final GetObjectRequest request = new GetObjectRequest(bucketPath, fileName);
         S3Object s3Object = client.getObject(request);
         Map<String, Object> metadata = s3Object.getObjectMetadata().getRawMetadata();
@@ -67,8 +76,8 @@ public class BillingS3Client {
     }
 
     public boolean sendFile(File fileToSend, String bucketPath, String fileName, AwsCredentialType credentialType,
-                            String profileName, String region) throws AmazonClientException, InterruptedException, IOException {
-        AmazonS3 client = getClient(credentialType, profileName, region);
+                            String profileName, String region, String endpoint) throws AmazonClientException, InterruptedException, IOException {
+        AmazonS3 client = getClient(credentialType, profileName, region, endpoint);
         PutObjectRequest request = new PutObjectRequest(bucketPath, fileName, fileToSend);
         if(request.getMetadata() == null)
             request.setMetadata(new ObjectMetadata());
@@ -79,8 +88,9 @@ public class BillingS3Client {
     }
 
 
-    public void deleteFile(String bucketPath, String fileName, AwsCredentialType credentialType, String profileName, String region) throws AmazonClientException, InterruptedException {
-        AmazonS3 client = getClient(credentialType, profileName, region);
+    public void deleteFile(String bucketPath, String fileName, AwsCredentialType credentialType,
+                           String profileName, String region, String endpoint) throws AmazonClientException, InterruptedException {
+        AmazonS3 client = getClient(credentialType, profileName, region, endpoint);
         DeleteObjectRequest request = new DeleteObjectRequest(bucketPath, fileName);
         client.deleteObject(request);
     }

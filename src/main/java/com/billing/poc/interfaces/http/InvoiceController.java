@@ -41,7 +41,7 @@ public class InvoiceController {
     }
 
     @ApiOperation(value="Add a file to S3", nickname="addFile", notes="This service upload the file")
-    @RequestMapping(path="/{fileName}",  consumes ="multipart/form-data", method= RequestMethod.POST, produces="application/json")
+    @RequestMapping(path="/files/{fileName}",  consumes ="multipart/form-data", method= RequestMethod.POST, produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "fileName", value = "name of the file to upload", required = true, dataType = "string", paramType = "path")
     })
@@ -67,7 +67,7 @@ public class InvoiceController {
     }
 
     @ApiOperation(value="download a file stored into S3", nickname="downloadFile", notes="This service retrieve a document stored into S3")
-    @RequestMapping(path="/{fileName}", produces="*")
+    @RequestMapping(path="/files/{fileName}", produces="*", method= RequestMethod.GET)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "fileName", value = "The file name", required = true, dataType = "string", paramType = "path")
     })

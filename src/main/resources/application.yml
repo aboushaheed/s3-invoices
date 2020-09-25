@@ -11,13 +11,13 @@ spring:
     driverClassName: org.h2.Driver
   profiles:
     active: dev
-
 aws:
   s3:
     main_bucket: main-bucket
     sub_bucket: sub-bucket
     credential_type: LOCAL
     region: us-west-2
+    endpoint: "http://localhost:4572" #when using localstack and LOCAL credential_type
   profile:
     name: default
 
