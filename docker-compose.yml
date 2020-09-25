@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  pythonproject:
+    image: ${DOCKER_IMAGE_URI}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
